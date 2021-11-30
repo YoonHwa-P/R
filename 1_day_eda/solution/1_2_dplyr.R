@@ -10,6 +10,7 @@
 나이 <- c(30, 20, 34, 50)
 지각 <- c(TRUE, FALSE, FALSE, FALSE)
 
+
 data.frame(이름 = 이름, 
              나이 = 나이, 
              지각 = 지각)
@@ -19,7 +20,7 @@ data.frame(이름 = 이름,
                    지각 = 지각)
 
 print(학생)
-str(학생)
+str(학생) #structure :객체의 구조를 본다. 
 
 학생 <- data.frame(이름 = 이름, 
                    나이 = 나이, 
@@ -28,29 +29,42 @@ str(학생)
 
 str(학생)
 
+
+
+
 #### 2. 파일 내보내기 ####
 # 1. CSV 파일로 내보내기
-getwd()
-setwd('R_NCS_2020/1_day/')
+getwd()  #file의 현재 경로 확인하기
+# setwd('R_NCS_2020/1_day/')
 write.csv(x = 학생, file = "data/학생.csv")
 
 # 2. 엑셀파일로 내보내기
 # install.packages("writexl")
 writexl::write_xlsx(x = 학생, path = "data/학생.xlsx")
 
-# 모두 지우기
+# 모두 지우기 -data frame에 저장 된 것이 사라짐 (Environment)
 rm(list = ls())
+
+
+
+
+
 
 #### 3. 파일 불러오기 ####
 getwd()
 
-학생 <- read.csv("학생.csv", stringsAsFactors = FALSE)
-학생2 <- readxl::read_xlsx("학생.xlsx", sheet = 1)
+학생 <- read.csv("data/학생.csv", stringsAsFactors = FALSE)
+학생2 <- readxl::read_xlsx("data/학생.xlsx", sheet = 1)
+
+
 
 #### Step 2. dplyr 소개 및 패키지 설치 ####
 # dplyr 패키지 설치
 # 패키지 개발자: Hadley Wickham, (http://hadley.nz/)
 
+
+
+# python의 Pandas 같은거다. 
 # dplyr을 사용하는 방법에는 크게 2가지 방법이 있습니다. 
 # 두가지 방법이 있음
 # The easiest way to get dplyr is to install the whole tidyverse:
@@ -60,11 +74,14 @@ library(tidyverse)
 # Alternatively, install just dplyr:
 install.packages("dplyr")
 library(dplyr)
+#groupby와 같음.
+
+
 
 #### Step 3. 데이터 처리와 관련된 주요 함수 소개 ####
 # 데이터 가져오기
 getwd()
-counties <- readxl::read_xlsx("counties.xslx", sheet = 1) 
+counties <- readxl::read_xlsx("data/counties.xslx", sheet = 1) 
 
 # 실무 할 때, 우리는 데이터를 모른다는 전제하에 출발합니다. 
 # 생각보다 데이터셋이 매우 큽니다. 
@@ -72,7 +89,15 @@ counties <- readxl::read_xlsx("counties.xslx", sheet = 1)
 
 # ----- (1) glimpse() -----
 ## 데이터를 전체적으로 개괄적으로 확인합니다. 
+library(dplyr)
 glimpse(counties)
+
+#---이런 Error Message가 뜨면 ---
+#Error in glimpse(counties) : could not find function "glimpse"
+#library(dplyr) 이걸 설치 해 주면 된다. 
+
+
+
 
 ## 무엇이 먼저 보이나요? 
 # 데이터 보는 법
@@ -80,7 +105,10 @@ glimpse(counties)
 ## 만약 변수의 이름이 제대로 정의가 되어 있지 않는다고 한다면,, 어떻게 해야 할까요? 
 ## 데이터 분석가의 입장에서, 데이터 엔지니어 입장에서, 데이터 서비스 기획자 입장에서, 경영자 입장에서 생각해보기
 
-# ----- (2) select() -----
+
+
+
+# ----- (2) select() -----열 추출
 # 주요 변수들을 추출합니다. 
 ## 데이터 분석가의 입장에서, 데이터 엔지니어 입장에서, 데이터 서비스 기획자 입장에서, 경영자 입장에서 생각해보기
 # 코드 작성
@@ -88,25 +116,32 @@ glimpse(counties)
 counties %>% 
   select(state, county, population, employed, public_work)
 
+
+
 # 코드 연습
 # 수강생이 원하는 변수를 추출하세요. 
 counties %>% 
   select()
 
+
 # ----- (3) arrange() -----
 # public_work 변수를 기준으로 내림차순으로 정렬합니다. 
-counties_selected <- counties %>%
+counties_selected <- counties  %>% #(~에서)
   select(state, private_work, public_work, self_employed)
 
 counties_selected %>% 
   arrange(desc(public_work))
+
 
 # self_employed 변수를 기준으로 오름차순으로 정렬합니다. 
 # 수강생이 직접입력합니다. (주석을 풉니다. )
 # counties_selected %>% 
 # 
 
-# ----- (4) filter() -----
+counties_selected %>% head()
+
+
+# ----- (4) filter() -----행추출
 # 조건에 따라 불필요한 관측치는 제거합니다. 
 ## 데이터 분석가의 입장에서, 데이터 엔지니어 입장에서, 데이터 서비스 기획자 입장에서, 경영자 입장에서 생각해보기
 counties_selected <- counties %>%
@@ -117,9 +152,11 @@ counties_selected <- counties %>%
 counties_selected %>% 
   filter(population > 100000)
 
+
 # 인구가 1000명이 아래인 state & county를 추출하세요. 
 # (주석을 풉니다. )
-# counties_selected %>% 
+ counties_selected %>% filter(population < 1000)
+
 
 # 조건이 두가지 일 때
 # state가 캘리포니아이면서 인구가 백만명 이상인 지역을 추출하세요. (AND 조건)
@@ -129,6 +166,9 @@ counties_selected %>%
 # state가 Colorado이거나 또는 인구가 천명 이하인 지역을 추출하세요 (OR 조건)
 counties_selected %>% 
   filter(state == "Colorado" | population < 1000)
+
+
+
 
 # ----- (5) filter() & Arrange() -----
 # 두개의 함수 중복 사용하기
@@ -140,10 +180,14 @@ counties_selected %>%
   filter(state == "California" & population >= 10000) %>% 
   arrange(desc(public_work))
 
+
+
+
+
 # ----- (6) mutate() -----
 # mutate는 영어 사전에서 보면 돌연변이 또는 변이라는 의미를 내포하고 있습니다. 
 # 즉, 단순히 변수를 하나 더 추가하자는 뜻이 아니라 무언가 의미있는 데이터를 발견하고자 할 때 쓰는 경우가 좋습니다. 
-## 데이터 분석가의 입장에서, 데이터 엔지니어 입장에서, 데이터 서비스 기획자 입장에서, 경영자 입장에서 생각해보기
+
 counties_selected <- counties %>%
   select(state, county, population, private_work)
 
@@ -211,6 +255,9 @@ counties_selected <- counties %>%
 ## count() 함수를 활용하며, pop_wakers에 가중치를 둔 후, 각 state별 내림차순으로 집계를 합니다. 
 # count(state, wt = pop_wakers, sort = TRUE)
 
+
+
+
 # ----- (2) summarise() -----
 # summarise() 함수는 데이터를 (기초통계량) 요약해주는 함수입니다. 
 # 함께 사용하는 기본함수는
@@ -261,6 +308,7 @@ counties_selected %>%
   summarize(average_pop = mean(population), 
             median_pop = median(population))
 
+
 # 일차적으로 구한다면, 각 주와 state별로 전체 인구수를 구합니다. 
 # summarise()를 한번만 사용하게 되면, 무언가 원하는 그림이 아닙니다. 
 counties_selected %>%
@@ -269,6 +317,9 @@ counties_selected %>%
   # 이 때 다시한번 summarise() 함수를 사용하게 되면 각 region 및 state별로 함수를 구할 수 있습니다. 
   summarise(avg_pop = mean(total_pop), 
             med_pop = median(total_pop))
+
+
+
 
 # ----- (5) top_n() -----
 # top_n() 함수와 Group_by()를 같이 활용하면 최중요지표를 보다 쉽게 추출할 수 있습니다.  

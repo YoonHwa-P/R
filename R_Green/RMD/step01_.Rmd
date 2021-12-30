@@ -1,0 +1,104 @@
+---
+title: "by RMD file in R-studio"
+author: "YH"
+date: '2021 11 30 '
+output: 
+  html_document:
+    keep_md: true
+    toc : true
+---
+
+## 옵션
+
+- 여기서 option을 변경 할 수 있다. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+# install.packages(c("nycflights13", "gapminder", "Lahman"))
+```
+
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+## \'##'이건 테이블 목차
+
+
+Ctrl + Alt + I = 
+```{r}
+a= 1
+```
+
+소스코드를 입력하는 박스가 나온다. 
+
+
+### 3.5 Facets
+
+- multiple plot을 한 plot에 넣기
+- python의 subplot과 같은 느낌.
+
+- nrow, ncol  : 열, 행 의 갯수 조절
+
+
+```{r}
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 3)
+
+```
+
+  > mpg$class
+mpg data 안에 있는 class column을 볼 수 있다. 
+
+
+두 변수의 조합에서 플롯을 면으로 표시하려면 플롯 호출에 facet_grid(). pacet_grid()의 첫 번째 인수도 공식이다. 
+이때 공식에는 ~로 구분된 두 개의 변수 이름이 포함되어야 합니다.
+
+
+
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_grid(drv ~ cyl)
+```
+
+행 또는 열 차원에서 면을 표시하지 않으려면 변수 이름(예: + facet_grid()) 대신 .를 사용합니다. ~ 사이얼)
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = drv, y = cyl))
+```
+
+
+
+```{r}
+
+```
+
